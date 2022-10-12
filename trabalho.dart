@@ -37,5 +37,4 @@ void main() {
   print("Informe uma expressão matematica pos-fixa:");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
-  //pegar o "("
 }
