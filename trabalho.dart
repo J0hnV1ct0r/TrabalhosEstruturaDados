@@ -37,4 +37,26 @@ void main() {
   print("Informe uma expressão matematica pos-fixa:");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
+ //pegar o "("
+  convercao(pilhaNum, expressao);
+}
+//converção pra pos-fixo:
+convercao(var pilhaNum, var expressao){
+  var espera = Lista();
+  var numero;
+  for(int t = 0; t < expressao.length; t++){
+    if(expressao[t] == "("){
+      print("deu bom!!");
+    }
+    if (expressao[t] == "+" ||
+        expressao[t] == "-" ||
+        expressao[t] == "*" ||
+        expressao[t] == "/") {
+       espera.push(expressao[t]);
+    } else {
+      pilhaNum.push(expressao[t]);
+    }
+  }
+  pilhaNum.push2(espera);
+  print('Resultadado: ${pilhaNum.lista}');
 }
