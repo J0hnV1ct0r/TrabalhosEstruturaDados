@@ -7,6 +7,7 @@ class Excecao implements Exception {
 //Classe Lista:
 class Lista {
   var lista = [];
+  var exp = "";
   //Construtor:
   Lista() {
     this.lista = [];
@@ -14,6 +15,13 @@ class Lista {
   //funçao Push:
   void push(var add) {
     this.lista = this.lista + [add];
+    this.exp = this.exp + " ${add}";
+  }
+  //funçao PushOperador:
+  void pushOperador(var add) {
+    for(int y = 0; y < add.lista.length; y++){
+      this.exp = this.exp + " ${add.lista[y]}";
+    }
   }
   //função Pop:
   pop() {
@@ -41,10 +49,9 @@ void main() {
   //pegar o "("
   convercao(pilhaNum, expressao);
 }
-//converção pra pos-fixo:
+//conversão pra pos-fixo:
 convercao(var pilhaNum, var expressao){
   var espera = Lista();
-  var numero;
   for(int t = 0; t < expressao.length; t++){
     if(expressao[t] == "("){
       print("deu bom!!");
@@ -58,6 +65,6 @@ convercao(var pilhaNum, var expressao){
       pilhaNum.push(expressao[t]);
     }
   }
-  pilhaNum.push2(espera);
-  print('Resultadado: ${pilhaNum.lista}');
+  pilhaNum.pushOperador(espera);
+  print('Resultadado: ${pilhaNum.exp}');
 }
