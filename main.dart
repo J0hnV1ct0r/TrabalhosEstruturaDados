@@ -44,7 +44,7 @@ void main() {
  // Declarando Pilha de Número:
   Lista pilhaNum = Lista();
   //Entrada de Dados:
-  print("Informe uma expressão matematica pos-fixa:");
+  print("Informe uma expressão matematica infixa:");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
   //pegar o "("
@@ -53,25 +53,22 @@ void main() {
 //conversão pra pos-fixo:
 convercao(var pilhaNum, var expressao){
   var espera = Lista();
-  for(int t = 0; t < expressao.length; t++){
-    if(expressao[t] == ")"){
+  for (int t = 0; t < expressao.length; t++) {
+    if (expressao[t] == ")") {
       pilhaNum.pushOperador(espera);
-    }else{
+    } else {
      if (expressao[t] == "+" ||
          expressao[t] == "-" ||
          expressao[t] == "*" ||
          expressao[t] == "/") {
-       
        espera.push(expressao[t]);
      } else {
-       if(expressao[t] != "("){
+       if (expressao[t] != "(") {
          pilhaNum.push(expressao[t]);
        }
      }
     }    
   }    
   pilhaNum.pushOperador(espera);
-  print('Resultadado: ${pilhaNum.exp}');
+  print('Formula convertida: ${pilhaNum.exp}');
 }
-
-// Teste de precedencia:
