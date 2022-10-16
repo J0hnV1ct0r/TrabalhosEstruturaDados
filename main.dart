@@ -22,6 +22,7 @@ class Lista {
     for(int y = 0; y < add.lista.length; y++){
       this.exp = this.exp + " ${add.lista[y]}";
     }
+    add.lista = [];
   }
   //função Pop:
   pop() {
@@ -53,18 +54,24 @@ void main() {
 convercao(var pilhaNum, var expressao){
   var espera = Lista();
   for(int t = 0; t < expressao.length; t++){
-    if(expressao[t] == "("){
-      print("deu bom!!");
-    }
-    if (expressao[t] == "+" ||
-        expressao[t] == "-" ||
-        expressao[t] == "*" ||
-        expressao[t] == "/") {
+    if(expressao[t] == ")"){
+      pilhaNum.pushOperador(espera);
+    }else{
+     if (expressao[t] == "+" ||
+         expressao[t] == "-" ||
+         expressao[t] == "*" ||
+         expressao[t] == "/") {
+       
        espera.push(expressao[t]);
-    } else {
-      pilhaNum.push(expressao[t]);
-    }
-  }
+     } else {
+       if(expressao[t] != "("){
+         pilhaNum.push(expressao[t]);
+       }
+     }
+    }    
+  }    
   pilhaNum.pushOperador(espera);
   print('Resultadado: ${pilhaNum.exp}');
 }
+
+// Teste de precedencia:
