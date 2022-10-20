@@ -53,10 +53,11 @@ void main() {
   //pegar o "("
   convercao(pilhaNum, expressao);
 }
-
 //conversão pra pos-fixo:
 convercao(var pilhaNum, var expressao){
   var espera = Lista();
+  var dicionario = {"(":0,"+":1, "-":1, "/":2, "*":3};
+  print(dicionario["("]);
   for (int t = 0; t < expressao.length; t++) {
     if (expressao[t] == ")") {
       pilhaNum.pushOperador(espera);
@@ -65,7 +66,13 @@ convercao(var pilhaNum, var expressao){
          expressao[t] == "-" ||
          expressao[t] == "*" ||
          expressao[t] == "/") {
-           espera.push(expressao[t]);
+       if(espera.lista.length > 1){
+         if(dicionario[expressao[t]] == dicionario[espera.lista[espera.get()]]){
+           print("funfou");
+         }
+       }else{
+         espera.push(expressao[t]);
+       }
      } else {
        if (expressao[t] == "(") {
          espera.push(expressao[t]);
@@ -77,29 +84,4 @@ convercao(var pilhaNum, var expressao){
   }    
   pilhaNum.pushOperador(espera);
   print('Formula convertida: ${pilhaNum.exp}');
-}
-//Teste de precedencia:
-precedencia(var operdarorNovo, var pilha){
-  var listaOper = pilha.lista[pilha.list.lenght - 1];
-  var dicionario = {"(": 0,"+": 1, "-": 1, "/": 2, "*": 3};
-  if (dicionario[operdarorNovo] == 1) {
-    if (dicionario[listaOper] == 1) {
-      
-    } else {
-      
-    }
-  } else if(dicionario[operdarorNovo] == 2) {
-    if (dicionario[listaOper] == 2) {
-      
-    } else {
-      
-    } 
-  } else {
-    if (dicionario[listaOper] == 3) {
-      
-    } else {
-      
-    }
-  }
-    
 }
