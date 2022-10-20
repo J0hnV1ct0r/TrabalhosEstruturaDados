@@ -42,6 +42,7 @@ class Lista {
     return lista[0];
   }
 }
+
 //  Função principal:
 void main() {
  // Declarando Pilha de Número:
@@ -50,7 +51,8 @@ void main() {
   print("Informe uma expressão matematica infixa:");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
-  //pegar o "("
+  
+  //Conversão:
   convercao(pilhaNum, expressao);
 }
 //conversão pra pos-fixo:
@@ -71,7 +73,7 @@ convercao(var pilhaNum, var expressao){
        }else{
          pilhaNum.push(expressao[t]);
        }
-     }
+      }
     }    
   }    
   pilhaNum.pushOperador(espera);

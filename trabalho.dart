@@ -20,9 +20,12 @@ class Lista {
   //funçao PushOperador:
   void pushOperador(var add) {
     for(int y = 0; y < add.lista.length; y++){
-      this.exp = this.exp + " ${add.lista[y]}";
+      if(add.lista[y] == "("){
+        this.exp = this.exp + " ${add.pop()}"; 
+      }else{
+       add.pop();
+      }
     }
-    add.lista = [];
   }
   //função Pop:
   pop() {
@@ -47,7 +50,7 @@ void main() {
   print("Informe uma expressão matematica infixa");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
- //pegar o "("
+ //Conversão:
   convercao(pilhaNum, expressao);
 }
 
@@ -62,10 +65,11 @@ convercao(var pilhaNum, var expressao){
          expressao[t] == "-" ||
          expressao[t] == "*" ||
          expressao[t] == "/") {
-       
        espera.push(expressao[t]);
      } else {
-       if(expressao[t] != "("){
+       if (expressao[t] == "(") {
+         espera.push(expressao[t]);
+       }else{
          pilhaNum.push(expressao[t]);
        }
      }
