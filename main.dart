@@ -19,8 +19,18 @@ class Lista {
   }
   //funçao PushOperador:
   void pushOperador(var add) {
-    for(int y = 0; y < add.lista.length; y++){
-      if(add.lista[y] == "("){
+    for(int y = add.lista.length - 1; y >= 0; y--){
+      if(add.lista[y] != "("){
+        this.exp = this.exp + " ${add.pop()}"; 
+      }else{
+       add.pop();
+      }
+    }
+  }
+  //funçao PushOperador:
+  void pushNumero(var add) {
+    for(int y = add.lista.length - 1; y > 0; y--){
+      if(add.lista[y] != "("){
         this.exp = this.exp + " ${add.pop()}"; 
       }else{
        add.pop();
@@ -42,30 +52,25 @@ class Lista {
     return lista[0];
   }
 }
-
 //  Função principal:
 void main() {
+ // Declarando Pilha de Número:
+  Lista pilhaNum = Lista();
   //Entrada de Dados:
   print("Informe uma expressão matematica infixa:");
   final entrada = stdin.readLineSync();
-  List expressao = entrada!.split(" ");  
-  //Conversão:
-  convercao(expressao);
+  List expressao = entrada!.split(" ");
+  //pegar o "("
+  convercao(pilhaNum, expressao);
 }
-
 //conversão pra pos-fixo:
-convercao(var expressao){
-  //Declarando as listas usasdas:
-  Lista pilhaNum = Lista();
+convercao(var pilhaNum, var expressao){
   var espera = Lista();
-  //Declarando o dicionario de precedencias:
-  var precedencia = { "+":4, "-": 4, "/": 3, "*": 2, "(": 1};
+  var numeroEsp = Lista();
   for (int t = 0; t < expressao.length; t++) {
-    //Testa se encontrou o parenteses de fechamento:
     if (expressao[t] == ")") {
       pilhaNum.pushOperador(espera);
     } else {
-      //Testa se é operador:
      if (expressao[t] == "+" ||
          expressao[t] == "-" ||
          expressao[t] == "*" ||
@@ -77,11 +82,9 @@ convercao(var expressao){
        }else{
          pilhaNum.push(expressao[t]);
        }
-      }
+     }
     }    
-  }  
-  //Coloca os opredadores guardados dentro da expressão de saida:
+  }    
   pilhaNum.pushOperador(espera);
-  //Saida:
   print('Formula convertida: ${pilhaNum.exp}');
 }

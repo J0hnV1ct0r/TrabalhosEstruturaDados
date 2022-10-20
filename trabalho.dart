@@ -18,9 +18,9 @@ class Lista {
     this.exp = this.exp + " ${add}";
   }
   //funçao PushOperador:
-  void pushOperador(var add) {
-    for(int y = 0; y < add.lista.length; y++){
-      if(add.lista[y] == "("){
+   void pushNumero(var add) {
+    for(int y = add.lista.length - 1; y > 0; y--){
+      if(add.lista[y] != "("){
         this.exp = this.exp + " ${add.pop()}"; 
       }else{
        add.pop();
