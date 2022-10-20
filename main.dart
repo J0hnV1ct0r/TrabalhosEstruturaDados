@@ -45,23 +45,27 @@ class Lista {
 
 //  Função principal:
 void main() {
- // Declarando Pilha de Número:
-  Lista pilhaNum = Lista();
   //Entrada de Dados:
   print("Informe uma expressão matematica infixa:");
   final entrada = stdin.readLineSync();
-  List expressao = entrada!.split(" ");
-  
+  List expressao = entrada!.split(" ");  
   //Conversão:
-  convercao(pilhaNum, expressao);
+  convercao(expressao);
 }
+
 //conversão pra pos-fixo:
-convercao(var pilhaNum, var expressao){
+convercao(var expressao){
+  //Declarando as listas usasdas:
+  Lista pilhaNum = Lista();
   var espera = Lista();
+  //Declarando o dicionario de precedencias:
+  var precedencia = { "+":4, "-": 4, "/": 3, "*": 2, "(": 1};
   for (int t = 0; t < expressao.length; t++) {
+    //Testa se encontrou o parenteses de fechamento:
     if (expressao[t] == ")") {
       pilhaNum.pushOperador(espera);
     } else {
+      //Testa se é operador:
      if (expressao[t] == "+" ||
          expressao[t] == "-" ||
          expressao[t] == "*" ||
@@ -75,7 +79,9 @@ convercao(var pilhaNum, var expressao){
        }
       }
     }    
-  }    
+  }  
+  //Coloca os opredadores guardados dentro da expressão de saida:
   pilhaNum.pushOperador(espera);
+  //Saida:
   print('Formula convertida: ${pilhaNum.exp}');
 }

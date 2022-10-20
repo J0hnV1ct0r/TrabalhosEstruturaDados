@@ -57,6 +57,8 @@ void main() {
 //Converção pra pos-fixo:
 convercao(var pilhaNum, var expressao){
   var espera = Lista();
+  //Declarando o dicionario de precedencias:
+  var precedencia = { "+":4, "-": 4, "/": 3, "*": 2, "(": 1};
   for(int t = 0; t < expressao.length; t++){
     if(expressao[t] == ")"){
       pilhaNum.pushOperador(espera);
