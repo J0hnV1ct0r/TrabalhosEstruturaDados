@@ -93,7 +93,7 @@ convercao(var pilhaSaida, var expressao) {
 //Teste de precedencia:
 precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
-  //opredaor que entrou '+' ou '-'
+  //opredaor novo '+' ou '-'
   if (operadorNovo == "+" || operadorNovo == "-") {
     if (listaOper == "+" || listaOper == "-") {
       //jogar operdor do topo da pilha na pilha de saida
@@ -105,10 +105,10 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
       pilhaOperador.push(operadorNovo);
     }
   }
+  //opredor novo é '/'
   if (operadorNovo == "/") {
     if (listaOper == "+" || listaOper == "-") {
       //coloco todos os operadores da lista de opreradores na pilha de saida
-      pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "/") {
       //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
@@ -116,9 +116,11 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "*") {
       //coloco o operador novo na pilha de operadores
+      pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
     }
   }
+  //opredor novo é '*'
   if (operadorNovo == "*") {
     if (listaOper == "+" || listaOper == "-" || listaOper == "/") {
       pilhaOperador.push(operadorNovo);
