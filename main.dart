@@ -64,67 +64,45 @@ void main() {
 //conversão pra pos-fixo:
 convercao(var pilhaSaida, var expressao) {
   var pilhaOperador = Lista();
-  var pilhaParanteses = Lista();
+  var pilhaParenteses = Lista();
+  var pilhaParentesesEx = Lista();
   var parenteses; 
+  var contador = 0;
   for (int t = 0; t < expressao.length; t++) {
-
     if (expressao[t] == "("){
       parenteses = true;
+      //pilhaParenteses.push(expressao[t]);
+      contador++;
     }else if(expressao[t] == ")"){
-      parenteses = false;
-      pilhaSaida.pushOperador(pilhaParanteses);
-    }
-
-    if (parenteses == true){
-      if (expressao[t] == "+" ||
-          expressao[t] == "-" ||
-          expressao[t] == "*" ||
-          expressao[t] == "/") {
-        
-        if (pilhaParanteses.lista.length >= 1){
-          precedencia(expressao[t],pilhaParanteses,pilhaSaida);
-         } else {
-          pilhaParanteses.push(expressao[t]);
-         }
-       
-       } else {
-        if (expressao[t] == "(" || expressao[t] == ")") {
-          //pilhaSaida.push(expressao[t]);
-        }else{
-           pilhaSaida.push(expressao[t]);
-        } 
+      pilhaSaida.pushOperador(pilhaParenteses);
+      contador--;
+      if(contador == 0){
+        parenteses = false;
+        //pilhaParenteses.pop()
+        pilhaSaida.pushOperador(pilhaParentesesEx);
       }
-      
-    } else {
-      if (expressao[t] == "+" ||
-          expressao[t] == "-" ||
-          expressao[t] == "*" ||
-          expressao[t] == "/") {
-        
-         if (pilhaOperador.lista.length >= 1){
-          precedencia(expressao[t],pilhaOperador, pilhaSaida);
-         }else{
-          pilhaOperador.push(expressao[t]);
-         }
-      } else {
-        if (expressao[t] == "(" || expressao[t] == ")") {
-        }else{
-          pilhaSaida.push(expressao[t]);
-        } 
-      }
+    } 
+    //operação:
+    if (parenteses == true && contador == 1){
+      operacao(pilhaParentesesEx,pilhaSaida,expressao[t]);
+    } else if(parenteses == true) {
+      operacao(pilhaParenteses,pilhaSaida,expressao[t]);
+    }else{
+      operacao(pilhaOperador,pilhaSaida,expressao[t]);
     }
   }
-  pilhaSaida.pushOperador(pilhaOperador);
-  print('Formula convertida: ${pilhaSaida.exp}');
+  
+  if(contador == 0){
+    pilhaSaida.pushOperador(pilhaOperador);
+    print('Formula convertida: ${pilhaSaida.exp}');
+  }else{
+    print("ERRO: Falta um parenteses final");
+  }
 }
 
 //Teste de precedencia:
 precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
-  // alcançou ')':
-  //if (operadorNovo == ")"){
-    //pilhaSaida.pushOperador(pilhaOperador);
-  //}
   //opredaor novo '+' ou '-'
   if (operadorNovo == "+" || operadorNovo == "-") {
     if (listaOper == "+" || listaOper == "-") {
@@ -166,3 +144,25 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
     }
   }
 }
+// função para sem parenteses:
+operacao(var pilhaOperador, var pilhaSaida,var expressao){
+  if (expressao == "+" ||
+          expressao == "-" ||
+          expressao == "*" ||
+          expressao == "/") {
+        
+         if (pilhaOperador.lista.length >= 1){
+          precedencia(expressao,pilhaOperador, pilhaSaida);
+         }else{
+          pilhaOperador.push(expressao);
+         }
+      } else {
+        if (expressao == "(" || expressao == ")") {
+        }else{
+          pilhaSaida.push(expressao);
+        } 
+      }
+}
+
+
+// função para com parenteses:
