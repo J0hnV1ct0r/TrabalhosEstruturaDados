@@ -127,13 +127,11 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
       //jogar operdor do topo da pilha na pilha de saida
       pilhaSaida.push(pilhaOperador.pop());
       pilhaOperador.push(operadorNovo);
-    } else if (listaOper == "*") {
+    } else if (listaOper == "*" || listaOper == "/") {
       //colocar todos os operdores na pilha de saida
       pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
-    }else if (listaOper == "/"){
-      pilhaOperador.push(operadorNovo);
-    }    
+    }
   }
   
   //opredor novo é '/':
@@ -143,7 +141,6 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
     }
     if (listaOper == "+" || listaOper == "-") {
       //coloco todos os operadores da lista de opreradores na pilha de saida
-      pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "/") {
       //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
