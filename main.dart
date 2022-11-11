@@ -1,4 +1,4 @@
-   import 'dart:io';
+import 'dart:io';
 
 //Classe Excecao:
 class Excecao implements Exception {
@@ -57,109 +57,45 @@ void main() {
   print("Informe uma expressão matematica infixa:");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
-  //pegar o "("
+  // Função de conversão:
   convercao(pilhaSaida, expressao);
 }
 
 //conversão pra pos-fixo:
 convercao(var pilhaSaida, var expressao) {
+  //Variaveis:
   var pilhaOperador = Lista();
   var parenteses; 
-  var contador = 0;
+  var contadorDeParenteses = 0;
+  
+  //Analise de parenteses:
   for (int t = 0; t < expressao.length; t++) {
     if (expressao[t] == "("){
       parenteses = true;
       pilhaOperador.push(expressao[t]);
-      //pilhaParenteses.push(expressao[t]);
-      contador++;
+      contadorDeParenteses++;
     }else if(expressao[t] == ")"){
-      //pilhaSaida.pushOperador(pilhaParentesesIn);
       pilhaSaida.pushOperador(pilhaOperador);
-      contador--;
-      if(contador == 0){
+      contadorDeParenteses--;
+      if(contadorDeParenteses == 0){
         parenteses = false;
-        //pilhaParenteses.pop()
-        //pilhaSaida.pushOperador(pilhaParentesesEx);
         pilhaSaida.pushOperador(pilhaOperador);
       }
     } 
-    
-    //operação:
-    if (parenteses == true && contador == 1){
-      //operacao(pilhaParentesesEx,pilhaSaida,expressao[t]);
-      operacao(pilhaOperador,pilhaSaida,expressao[t]);
-    } else if(parenteses == true) {
-      //operacao(pilhaParentesesIn,pilhaSaida,expressao[t]);
-      operacao(pilhaOperador,pilhaSaida,expressao[t]);
-    }else{
-      //operacao(pilhaOperador,pilhaSaida,expressao[t]);
-      operacao(pilhaOperador,pilhaSaida,expressao[t]);
-    }
+    operacao(pilhaOperador,pilhaSaida,expressao[t]);
   }
   
-  if(contador == 0){
+  if(contadorDeParenteses == 0){
     //pilhaSaida.pushOperador(pilhaOperador);
     pilhaSaida.pushOperador(pilhaOperador);
     print('Formula convertida: ${pilhaSaida.exp}');
   }else{
     print("ERRO: Falta um parenteses final");
+    exit(1);
   }
 }
 
-//Teste de precedencia:
-precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
-  var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
-  //opredaor novo '+' ou '-'
-  if (operadorNovo == "+" || operadorNovo == "-") {
-    if(listaOper == "("){
-      pilhaOperador.push(operadorNovo);
-    }
-    if (listaOper == "+" || listaOper == "-") {
-      //jogar operdor do topo da pilha na pilha de saida
-      pilhaSaida.push(pilhaOperador.pop());
-      pilhaOperador.push(operadorNovo);
-    } else if (listaOper == "*") {
-      //colocar o operdor novo na pilha de operadores
-      pilhaSaida.pushOperador(pilhaOperador);
-      pilhaOperador.push(operadorNovo);
-    }else if (listaOper == "/"){
-      pilhaOperador.push(operadorNovo);
-    }    
-  }
-  //opredor novo é '/'
-  if (operadorNovo == "/") {
-    if(listaOper == "("){
-      pilhaOperador.push(operadorNovo);
-    }
-    if (listaOper == "+" || listaOper == "-") {
-      //coloco todos os operadores da lista de opreradores na pilha de saida
-      pilhaSaida.pushOperador(pilhaOperador);
-      pilhaOperador.push(operadorNovo);
-    } else if (listaOper == "/") {
-      //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
-      pilhaSaida.push(pilhaOperador.pop());
-      pilhaOperador.push(operadorNovo);
-    } else if (listaOper == "*") {
-      //coloco o operador novo na pilha de operadores
-      pilhaSaida.pushOperador(pilhaOperador);
-      pilhaOperador.push(operadorNovo);
-    }
-  }
-  //opredor novo é '*'
-  if (operadorNovo == "*") {
-    if(listaOper == "("){
-      pilhaOperador.push(operadorNovo);
-    }
-    if (listaOper == "+" || listaOper == "-" || listaOper == "/") {
-      pilhaOperador.push(operadorNovo);
-    } else if (listaOper == "*") {
-      //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
-      pilhaSaida.push(pilhaOperador.pop());
-      pilhaOperador.push(operadorNovo);
-    }
-  }
-}
-// função para sem parenteses:
+//Função operação:
 operacao(var pilhaOperador, var pilhaSaida,var expressao){
   if (expressao == "+" ||
           expressao == "-" ||
@@ -179,5 +115,59 @@ operacao(var pilhaOperador, var pilhaSaida,var expressao){
       }
 }
 
+//Teste de precedencia:
+precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
+  var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
+  //opredaor novo '+' ou '-':
+  if (operadorNovo == "+" || operadorNovo == "-") {
+    if(listaOper == "("){
+      pilhaOperador.push(operadorNovo);
+    }
+    if (listaOper == "+" || listaOper == "-") {
+      //jogar operdor do topo da pilha na pilha de saida
+      pilhaSaida.push(pilhaOperador.pop());
+      pilhaOperador.push(operadorNovo);
+    } else if (listaOper == "*") {
+      //colocar todos os operdores na pilha de saida
+      pilhaSaida.pushOperador(pilhaOperador);
+      pilhaOperador.push(operadorNovo);
+    }else if (listaOper == "/"){
+      pilhaOperador.push(operadorNovo);
+    }    
+  }
+  
+  //opredor novo é '/':
+  if (operadorNovo == "/") {
+    if(listaOper == "("){
+      pilhaOperador.push(operadorNovo);
+    }
+    if (listaOper == "+" || listaOper == "-") {
+      //coloco todos os operadores da lista de opreradores na pilha de saida
+      pilhaSaida.pushOperador(pilhaOperador);
+      pilhaOperador.push(operadorNovo);
+    } else if (listaOper == "/") {
+      //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
+      pilhaSaida.push(pilhaOperador.pop());
+      pilhaOperador.push(operadorNovo);
+    } else if (listaOper == "*") {
+      //coloco todos os operadores velhos na pilha de saida
+      pilhaSaida.pushOperador(pilhaOperador);
+      pilhaOperador.push(operadorNovo);
+    }
+  }
+  //opredor novo é '*'
+  if (operadorNovo == "*") {
+    if(listaOper == "("){
+      pilhaOperador.push(operadorNovo);
+    }
+    if (listaOper == "+" || listaOper == "-" || listaOper == "/") {
+      //coloca o operador novo na pilha de operadores
+      pilhaOperador.push(operadorNovo);
+    } else if (listaOper == "*") {
+      //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
+      pilhaSaida.push(pilhaOperador.pop());
+      pilhaOperador.push(operadorNovo);
+    }
+  }
+}
 
-// função para com parenteses:
