@@ -1,4 +1,6 @@
- import 'dart:io';
+import 'dart:io';
+//NOME: João Victor de Souza Albuquerque
+//MATRICULA: 20211045050314
 
 //Classe Excecao:
 class Excecao implements Exception {
@@ -23,12 +25,12 @@ class Lista {
   //funçao PushOperador:
   void pushOperador(var add) {
     for (int y = add.lista.length - 1; y >= 0; y--) {
-      this.exp = this.exp + " ${add.pop()}";
-      //if (add.lista[y] != "(") {
-        //this.exp = this.exp + " ${add.pop()}";
-      //} else {
-        //add.pop();
-      //}
+      if (add.lista[y] == "(") {
+        add.pop();
+        y = -1;
+      } else {
+        this.exp = this.exp + " ${add.pop()}";
+      }
     }
   }
 
@@ -57,107 +59,114 @@ void main() {
   print("Informe uma expressão matematica infixa:");
   final entrada = stdin.readLineSync();
   List expressao = entrada!.split(" ");
-  //pegar o "("
+  // Função de conversão:
   convercao(pilhaSaida, expressao);
 }
 
 //conversão pra pos-fixo:
 convercao(var pilhaSaida, var expressao) {
+  //Variaveis:
   var pilhaOperador = Lista();
-  var pilhaParanteses = Lista();
-  var parenteses; 
-  var contador = 0;
+  var parenteses;
+  var contadorDeParenteses = 0;
+
+  //Analise de parenteses:
   for (int t = 0; t < expressao.length; t++) {
-
-    if (expressao[t] == "("){
+    if (expressao[t] == "(") {
       parenteses = true;
-      contador++;
-    }else if(expressao[t] == ")"){
-      contador--;
-      parenteses = false;
-      pilhaSaida.pushOperador(pilhaParanteses);
-    }
-       
-
-    if (parenteses == true){
-      if (expressao[t] == "+" ||
-          expressao[t] == "-" ||
-          expressao[t] == "*" ||
-          expressao[t] == "/") {
-        
-        if (pilhaParanteses.lista.length >= 1){
-          precedencia(expressao[t],pilhaParanteses,pilhaSaida);
-         } else {
-          pilhaParanteses.push(expressao[t]);
-         }
-       
-       } else {
-        if (expressao[t] == "(" || expressao[t] == ")") {
-          //pilhaSaida.push(expressao[t]);
-        }else{
-           pilhaSaida.push(expressao[t]);
-        } 
+      pilhaOperador.push(expressao[t]);
+      contadorDeParenteses++;
+    } else if (expressao[t] == ")") {
+      pilhaSaida.pushOperador(pilhaOperador);
+      contadorDeParenteses--;
+      if (contadorDeParenteses == 0) {
+        parenteses = false;
+        pilhaSaida.pushOperador(pilhaOperador);
       }
-      
+    }
+    operacao(pilhaOperador, pilhaSaida, expressao[t]);
+  }
+
+  if (contadorDeParenteses == 0) {
+    //pilhaSaida.pushOperador(pilhaOperador);
+    pilhaSaida.pushOperador(pilhaOperador);
+    print('Formula convertida: ${pilhaSaida.exp}');
+  } else {
+    print("ERRO: Falta parenteses");
+    exit(1);
+  }
+}
+
+//Função operação:
+operacao(var pilhaOperador, var pilhaSaida, var expressao) {
+  if (expressao == "+" ||
+      expressao == "-" ||
+      expressao == "*" ||
+      expressao == "/") {
+    if (pilhaOperador.lista.length >= 1) {
+      precedencia(expressao, pilhaOperador, pilhaSaida);
     } else {
-      if (expressao[t] == "+" ||
-          expressao[t] == "-" ||
-          expressao[t] == "*" ||
-          expressao[t] == "/") {
-        
-         if (pilhaOperador.lista.length >= 1){
-          precedencia(expressao[t],pilhaOperador, pilhaSaida);
-         }else{
-          pilhaOperador.push(expressao[t]);
-         }
-      } else {
-        if (expressao[t] == "(" || expressao[t] == ")") {
-        }else{
-          pilhaSaida.push(expressao[t]);
-        } 
+      pilhaOperador.push(expressao);
+    }
+  } else {
+    if (expressao == "(" || expressao == ")") {
+    } else {
+      if(testeNumerico(expressao)){
+        pilhaSaida.push(expressao);
+      }else{
+        print("ERRO: Forneça apenas valores numericos");
+        exit(1);
       }
     }
   }
-  pilhaSaida.pushOperador(pilhaOperador);
-  print('Formula convertida: ${pilhaSaida.exp}');
 }
 
 //Teste de precedencia:
 precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
-  //opredaor novo '+' ou '-'
+
+  //opredaor novo '+' ou '-':
   if (operadorNovo == "+" || operadorNovo == "-") {
+    if (listaOper == "(") {
+      pilhaOperador.push(operadorNovo);
+    }
     if (listaOper == "+" || listaOper == "-") {
       //jogar operdor do topo da pilha na pilha de saida
       pilhaSaida.push(pilhaOperador.pop());
       pilhaOperador.push(operadorNovo);
-    } else if (listaOper == "*") {
-      //colocar o operdor novo na pilha de operadores
+    } else if (listaOper == "*" || listaOper == "/") {
+      //colocar todos os operdores na pilha de saida
       pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
-    }else if (listaOper == "/"){
-      pilhaOperador.push(operadorNovo);
-    }    
+    }
   }
-  //opredor novo é '/'
+
+  //opredor novo é '/':
   if (operadorNovo == "/") {
+    if (listaOper == "(") {
+      pilhaOperador.push(operadorNovo);
+    }
     if (listaOper == "+" || listaOper == "-") {
       //coloco todos os operadores da lista de opreradores na pilha de saida
-      pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "/") {
       //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
       pilhaSaida.push(pilhaOperador.pop());
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "*") {
-      //coloco o operador novo na pilha de operadores
+      //coloco todos os operadores velhos na pilha de saida
       pilhaSaida.pushOperador(pilhaOperador);
       pilhaOperador.push(operadorNovo);
     }
   }
+
   //opredor novo é '*'
   if (operadorNovo == "*") {
+    if (listaOper == "(") {
+      pilhaOperador.push(operadorNovo);
+    }
     if (listaOper == "+" || listaOper == "-" || listaOper == "/") {
+      //coloca o operador novo na pilha de operadores
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "*") {
       //jogar operdor do topo da pilha de operadores na pilha de saida e coloca o novo operador na pilha de operadores
@@ -165,4 +174,13 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
       pilhaOperador.push(operadorNovo);
     }
   }
+}
+
+//Testando se é numero:
+bool testeNumerico(String s) {
+  final number = num.tryParse(s);
+  if (number == null) {
+    return false;
+  }
+  return true;
 }

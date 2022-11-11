@@ -1,10 +1,6 @@
 import 'dart:io';
-
-//Classe Excecao:
-class Excecao implements Exception {
-  String causa;
-  Excecao(this.causa);
-}
+//NOME: João Victor de Souza Albuquerque
+//MATRICULA: 20211045050314
 
 //Classe Lista:
 class Lista {
@@ -23,10 +19,10 @@ class Lista {
   //funçao PushOperador:
   void pushOperador(var add) {
     for (int y = add.lista.length - 1; y >= 0; y--) {
-      if(add.lista[y] == "("){
+      if (add.lista[y] == "(") {
         add.pop();
         y = -1;
-      }else{
+      } else {
         this.exp = this.exp + " ${add.pop()}";
       }
     }
@@ -65,62 +61,67 @@ void main() {
 convercao(var pilhaSaida, var expressao) {
   //Variaveis:
   var pilhaOperador = Lista();
-  var parenteses; 
+  var parenteses;
   var contadorDeParenteses = 0;
-  
+
   //Analise de parenteses:
   for (int t = 0; t < expressao.length; t++) {
-    if (expressao[t] == "("){
+    if (expressao[t] == "(") {
       parenteses = true;
       pilhaOperador.push(expressao[t]);
       contadorDeParenteses++;
-    }else if(expressao[t] == ")"){
+    } else if (expressao[t] == ")") {
       pilhaSaida.pushOperador(pilhaOperador);
       contadorDeParenteses--;
-      if(contadorDeParenteses == 0){
+      if (contadorDeParenteses == 0) {
         parenteses = false;
         pilhaSaida.pushOperador(pilhaOperador);
       }
-    } 
-    operacao(pilhaOperador,pilhaSaida,expressao[t]);
+    }
+    operacao(pilhaOperador, pilhaSaida, expressao[t]);
   }
-  
-  if(contadorDeParenteses == 0){
+
+  if (contadorDeParenteses == 0) {
     //pilhaSaida.pushOperador(pilhaOperador);
     pilhaSaida.pushOperador(pilhaOperador);
     print('Formula convertida: ${pilhaSaida.exp}');
-  }else{
-    print("ERRO: Falta um parenteses final");
+  } else {
+    print("ERRO: Falta parenteses");
     exit(1);
   }
 }
 
 //Função operação:
-operacao(var pilhaOperador, var pilhaSaida,var expressao){
+operacao(var pilhaOperador, var pilhaSaida, var expressao) {
   if (expressao == "+" ||
-          expressao == "-" ||
-          expressao == "*" ||
-          expressao == "/") {
-        
-         if (pilhaOperador.lista.length >= 1){
-          precedencia(expressao,pilhaOperador, pilhaSaida);
-         }else{
-          pilhaOperador.push(expressao);
-         }
-      } else {
-        if (expressao == "(" || expressao == ")") {
-        }else{
-          pilhaSaida.push(expressao);
-        } 
+      expressao == "-" ||
+      expressao == "*" ||
+      expressao == "/") {
+    if (pilhaOperador.lista.length >= 1) {
+      precedencia(expressao, pilhaOperador, pilhaSaida);
+    } else {
+      pilhaOperador.push(expressao);
+    }
+  } else {
+    if (expressao == "(" || expressao == ")") {
+    } else {
+      if(testeNumerico(expressao)){
+        pilhaSaida.push(expressao);
+      }else{
+        print("ERRO: Forneça apenas valores numericos");
+        exit(1);
       }
+    }
+  }
 }
 
 //Teste de precedencia:
 precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
+
   //opredaor novo '+' ou '-':
   if (operadorNovo == "+" || operadorNovo == "-") {
-    if(listaOper == "("){
+    if (listaOper == "(") {
       pilhaOperador.push(operadorNovo);
     }
     if (listaOper == "+" || listaOper == "-") {
@@ -133,10 +134,10 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
       pilhaOperador.push(operadorNovo);
     }
   }
-  
+
   //opredor novo é '/':
   if (operadorNovo == "/") {
-    if(listaOper == "("){
+    if (listaOper == "(") {
       pilhaOperador.push(operadorNovo);
     }
     if (listaOper == "+" || listaOper == "-") {
@@ -152,9 +153,10 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
       pilhaOperador.push(operadorNovo);
     }
   }
+
   //opredor novo é '*'
   if (operadorNovo == "*") {
-    if(listaOper == "("){
+    if (listaOper == "(") {
       pilhaOperador.push(operadorNovo);
     }
     if (listaOper == "+" || listaOper == "-" || listaOper == "/") {
@@ -168,3 +170,11 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   }
 }
 
+//Testando se é numero:
+bool testeNumerico(String s) {
+  final number = num.tryParse(s);
+  if (number == null) {
+    return false;
+  }
+  return true;
+}
