@@ -1,4 +1,4 @@
- import 'dart:io';
+   import 'dart:io';
 
 //Classe Excecao:
 class Excecao implements Exception {
@@ -23,12 +23,12 @@ class Lista {
   //funçao PushOperador:
   void pushOperador(var add) {
     for (int y = add.lista.length - 1; y >= 0; y--) {
-      this.exp = this.exp + " ${add.pop()}";
-      //if (add.lista[y] != "(") {
-        //this.exp = this.exp + " ${add.pop()}";
-      //} else {
-        //add.pop();
-      //}
+      if(add.lista[y] == "("){
+        add.pop();
+        y = -1;
+      }else{
+        this.exp = this.exp + " ${add.pop()}";
+      }
     }
   }
 
@@ -64,35 +64,41 @@ void main() {
 //conversão pra pos-fixo:
 convercao(var pilhaSaida, var expressao) {
   var pilhaOperador = Lista();
-  var pilhaParenteses = Lista();
-  var pilhaParentesesEx = Lista();
   var parenteses; 
   var contador = 0;
   for (int t = 0; t < expressao.length; t++) {
     if (expressao[t] == "("){
       parenteses = true;
+      pilhaOperador.push(expressao[t]);
       //pilhaParenteses.push(expressao[t]);
       contador++;
     }else if(expressao[t] == ")"){
-      pilhaSaida.pushOperador(pilhaParenteses);
+      //pilhaSaida.pushOperador(pilhaParentesesIn);
+      pilhaSaida.pushOperador(pilhaOperador);
       contador--;
       if(contador == 0){
         parenteses = false;
         //pilhaParenteses.pop()
-        pilhaSaida.pushOperador(pilhaParentesesEx);
+        //pilhaSaida.pushOperador(pilhaParentesesEx);
+        pilhaSaida.pushOperador(pilhaOperador);
       }
     } 
+    
     //operação:
     if (parenteses == true && contador == 1){
-      operacao(pilhaParentesesEx,pilhaSaida,expressao[t]);
+      //operacao(pilhaParentesesEx,pilhaSaida,expressao[t]);
+      operacao(pilhaOperador,pilhaSaida,expressao[t]);
     } else if(parenteses == true) {
-      operacao(pilhaParenteses,pilhaSaida,expressao[t]);
+      //operacao(pilhaParentesesIn,pilhaSaida,expressao[t]);
+      operacao(pilhaOperador,pilhaSaida,expressao[t]);
     }else{
+      //operacao(pilhaOperador,pilhaSaida,expressao[t]);
       operacao(pilhaOperador,pilhaSaida,expressao[t]);
     }
   }
   
   if(contador == 0){
+    //pilhaSaida.pushOperador(pilhaOperador);
     pilhaSaida.pushOperador(pilhaOperador);
     print('Formula convertida: ${pilhaSaida.exp}');
   }else{
@@ -105,6 +111,9 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   var listaOper = pilhaOperador.lista[pilhaOperador.lista.length - 1];
   //opredaor novo '+' ou '-'
   if (operadorNovo == "+" || operadorNovo == "-") {
+    if(listaOper == "("){
+      pilhaOperador.push(operadorNovo);
+    }
     if (listaOper == "+" || listaOper == "-") {
       //jogar operdor do topo da pilha na pilha de saida
       pilhaSaida.push(pilhaOperador.pop());
@@ -119,6 +128,9 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   }
   //opredor novo é '/'
   if (operadorNovo == "/") {
+    if(listaOper == "("){
+      pilhaOperador.push(operadorNovo);
+    }
     if (listaOper == "+" || listaOper == "-") {
       //coloco todos os operadores da lista de opreradores na pilha de saida
       pilhaSaida.pushOperador(pilhaOperador);
@@ -135,6 +147,9 @@ precedencia(var operadorNovo, var pilhaOperador, var pilhaSaida) {
   }
   //opredor novo é '*'
   if (operadorNovo == "*") {
+    if(listaOper == "("){
+      pilhaOperador.push(operadorNovo);
+    }
     if (listaOper == "+" || listaOper == "-" || listaOper == "/") {
       pilhaOperador.push(operadorNovo);
     } else if (listaOper == "*") {
